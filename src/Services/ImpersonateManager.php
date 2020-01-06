@@ -176,7 +176,8 @@ class ImpersonateManager
      */
     public function getSessionKey()
     {
-        return config('laravel-jwt-impersonate.session_key');
+        // to work with nova impersonate
+        return config('laravel-jwt-impersonate.session_key') ?? config('nova-impersonate.session_key') ;
     }
 
     /**

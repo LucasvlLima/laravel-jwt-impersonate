@@ -67,14 +67,15 @@ class ImpersonateServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $router = $this->app['router'];
         $middleware = $this->configName.'.'.$this->authMiddlewareKey;
+        $novaMiddleware = 'nova-impersonate.auth_middleware';
 
-        $router->macro('impersonate', function () use ($router, $middleware) {
+        $router->macro('impersonate', function () use ($router, $middleware, $novaMiddleware) {
             $router->get('/impersonate/take/{id}',
-                '\Rickycezar\Impersonate\Controllers\ImpersonateController@take')->name('impersonate')->middleware(config($middleware));
+                '\Rickycezar\Impersonate\Controllers\ImpersonateController@take')->name('impersonate')->middleware(config($middleware) ?? config($novaMiddleware));
             $router->get('/impersonate/leave',
-                '\Rickycezar\Impersonate\Controllers\ImpersonateController@leave')->name('impersonate.leave')->middleware(config($middleware));
+                '\Rickycezar\Impersonate\Controllers\ImpersonateController@leave')->name('impersonate.leave')->middleware(config($middleware) ?? config($novaMiddleware));
             $router->get('/impersonate/info',
-                '\Rickycezar\Impersonate\Controllers\ImpersonateController@info')->name('impersonate.info')->middleware(config($middleware));
+                '\Rickycezar\Impersonate\Controllers\ImpersonateController@info')->name('impersonate.info')->middleware(config($middleware) ?? config($novaMiddleware));
         });
     }
 
