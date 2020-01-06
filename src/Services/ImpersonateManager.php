@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Rickycezar\Impersonate\Events\LeaveImpersonation;
 use Rickycezar\Impersonate\Events\TakeImpersonation;
+use Illuminate\Support\Facades\Cookie;
 
 class ImpersonateManager
 {
@@ -101,7 +102,7 @@ class ImpersonateManager
                         $token = $this->deferLogin($to);
 
                         $this->app['events']->dispatch(new TakeImpersonation($from, $to));
-
+                        Cookie::queue(Cookie::make('token', $token));
                         return $token;
                     } else {
                         throw new CantImpersonateException();
@@ -131,7 +132,7 @@ class ImpersonateManager
             $token = $this->deferLogin($impersonator);
 
             $this->app['events']->dispatch(new LeaveImpersonation($impersonator, $impersonated));
-
+            Cookie::queue(Cookie::make('token', $token));
             return $token;
         } else {
             throw new NotImpersonatingException();
