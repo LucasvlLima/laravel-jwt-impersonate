@@ -36,7 +36,7 @@ class ImpersonateManager
     }
 
     /**
-     * @param   int $id
+     * @param int $id
      * @return  Model
      */
     public function findUserById($id)
@@ -60,12 +60,16 @@ class ImpersonateManager
     }
 
     /**
-     * @param   void
+     * @param void
      * @return  int|null
      */
     public function getImpersonatorId()
     {
-        return $this->auth->parseToken()->getPayLoad()->get($this->getSessionKey());
+        try {
+            return $this->auth->parseToken()->getPayLoad()->get($this->getSessionKey());
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
